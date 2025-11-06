@@ -2,59 +2,419 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Process | Invisible Senses</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hidden Futures / Invisible Senses</title>
+
+    <!-- Bootstrap + AOS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top left, #0a0a0a, #111, #000);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ---------- Navbar ---------- */
+        .navbar {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .navbar-brand {
+            color: #00e0ff !important;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* ---------- Hero Section ---------- */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            background: url('https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        }
+
+        /* Overlay */
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        /* Particle Canvas (behind text) */
+        .hero canvas#particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        /* Text block */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 90%;
+            width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: #00e0ff;
+            text-shadow: 0 0 15px #00e0ff;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            color: #ccc;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            margin-bottom: 30px;
+        }
+
+        .btn-custom {
+            background: linear-gradient(90deg, #00e0ff, #00ffa6);
+            color: #000;
+            font-weight: 600;
+            border-radius: 50px;
+            padding: 12px 40px;
+            transition: 0.3s;
+        }
+
+        .btn-custom:hover {
+            background: linear-gradient(90deg, #00ffa6, #00e0ff);
+            transform: scale(1.05);
+        }
+
+        /* ---------- Gallery ---------- */
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            transition: 0.4s;
+        }
+
+        .gallery-item:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            transform: scale(1.03);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            border-radius: 15px;
+            filter: grayscale(70%);
+            transition: 0.5s;
+        }
+
+        .gallery-item:hover img {
+            filter: grayscale(0%);
+        }
+
+        /* ---------- Modal ---------- */
+        .modal-content {
+            background: #111;
+            color: #fff;
+            border: 1px solid #00e0ff;
+            border-radius: 15px;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: #00e0ff;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .nav-tabs .nav-link {
+            color: #00e0ff;
+        }
+
+        audio {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        /* ---------- AI Section ---------- */
+        #ai {
+            background: #0c0c0c;
+            padding: 70px 0;
+            text-align: center;
+        }
+
+        #ai h2 {
+            color: #00e0ff;
+            margin-bottom: 20px;
+        }
+
+        #ai textarea {
+            width: 75%;
+            border: 1px solid #00e0ff;
+            background: #111;
+            color: #0ff;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        #promptOutput {
+            transition: opacity 0.5s ease;
+        }
+
+        /* ---------- About & Footer ---------- */
+        #about {
+            text-align: center;
+            padding: 70px 0;
+        }
+
+        #about h2 {
+            color: #00e0ff;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            background: #000;
+            text-align: center;
+            padding: 20px;
+            color: #999;
+        }
+
+        /* ---------- Responsive Adjustments ---------- */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            #ai textarea {
+                width: 90%;
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-dark text-light">
-    <nav class="navbar navbar-dark bg-black fixed-top">
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
-            <a href="index.html" class="navbar-brand fw-bold">← Back to Gallery</a>
+            <a class="navbar-brand" href="#">Hidden Futures</a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#ai">AI Process</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <section class="container mt-5 pt-5 pb-5">
-        <div class="text-center mb-5">
-            <h1 class="display-6 fw-semibold">Process & Behind the AI</h1>
-            <p class="text-secondary">How AI interprets emotion through art and sound</p>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-lg-8 bg-black p-4 rounded-4 shadow">
-                <h3 class="text-info">🧠 Concept Development</h3>
-                <p>Each emotion has a visible and hidden prompt; AI illustrates what we show vs what we feel.</p>
-                <h3 class="text-info mt-4">🎨 Image Generation</h3>
-                <p>Created with DALL·E and Midjourney using paired prompts for contrast and symbolism.</p>
-                <h3 class="text-info mt-4">🎵 Sound Design</h3>
-                <p>Generated in AIVA / Mubert / Suno from emotion descriptors (tempo, instruments, mood).</p>
-                <h3 class="text-info mt-4">💻 Website Build</h3>
-                <ul>
-                    <li>Bootstrap 5 layout & modals</li>
-                    <li>JavaScript for sliders and dynamic loading</li>
-                    <li>Audio integration for each sense</li>
-                </ul>
-                <h3 class="text-info mt-4">🤖 Ethics & Education</h3>
-                <p>All media AI-generated or royalty-free; students learn responsible AI creativity.</p>
-                <h3 class="text-info mt-4">🚀 Future Plans</h3>
-                <ul>
-                    <li>VR gallery version</li>
-                    <li>AI narrator chatbot</li>
-                    <li>User-generated emotion art</li>
-                </ul>
-                <div class="text-center mt-4">
-                    <a href="index.html" class="btn btn-outline-light me-2">Back</a>
-                    <a href="about.html" class="btn btn-outline-info">Concept</a>
-                </div>
-            </div>
+    <!-- Hero -->
+    <section class="hero d-flex align-items-center justify-content-center">
+        <canvas id="particles"></canvas>
+        <div class="hero-overlay"></div>
+        <div class="hero-content text-center">
+            <h1>Hidden Futures / Invisible Senses</h1>
+            <p>Transforming unseen human emotions into AI-generated art — visualizing hope, fear, empathy, and beyond.
+            </p>
+            <a href="#gallery" class="btn btn-custom mt-2">Explore the Experience</a>
         </div>
     </section>
 
-    <footer class="text-center py-4 small text-secondary">
-        © 2025 Invisible Senses Gallery · Process & Research by Belgacem Bouhdima
+    <!-- Gallery -->
+    <section id="gallery" class="py-5">
+        <div class="container text-center">
+            <h2 class="text-info mb-4">AI Art Gallery</h2>
+            <div class="row g-4" id="galleryGrid"></div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="artModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-info" id="modalTitle"></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalImg" src="" alt="Artwork" class="mb-3 w-100 rounded-3">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab"
+                                data-bs-target="#sound">Sound</button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab"
+                                data-bs-target="#invisible">Invisible Meaning</button></li>
+                    </ul>
+                    <div class="tab-content pt-3">
+                        <div class="tab-pane fade show active" id="sound"><audio id="modalAudio" controls></audio></div>
+                        <div class="tab-pane fade" id="invisible">
+                            <p id="modalInvisible"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Process -->
+    <section id="ai" class="py-5 text-center bg-black">
+        <div class="container">
+            <h2 class="text-info">How AI Creates the Art</h2>
+            <p class="mb-4">AI models interpret emotions and abstract ideas through crafted prompts.</p>
+            <textarea id="promptInput" rows="3" class="w-75 p-3 rounded-3 border-info bg-dark text-info"
+                placeholder="Type an emotion or invisible concept..."></textarea>
+            <div class="mt-3">
+                <button class="btn btn-custom" onclick="generatePrompt()">Generate Prompt</button>
+                <button class="btn btn-custom" onclick="clearPrompt()">Clear</button>
+            </div>
+            <p id="promptOutput" class="mt-4 text-info"></p>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="py-5 text-center">
+        <div class="container">
+            <h2 class="text-info mb-3">About the Project</h2>
+            <p>“Hidden Futures / Invisible Senses” uses AI to turn invisible feelings into visible, audible experiences.
+                Each piece reveals what’s hidden beneath emotion — bridging human empathy and machine creativity.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Hidden Futures | WAICY AI-Art Project</p>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+        window.addEventListener('scroll', () => { document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 50); });
+
+        // ---------------- 20 artworks -----------------
+        const artworks = [
+            { title: "Hope – The Light Rises", img: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&w=800", invisible: "Light always finds a way upward — unseen golden energy rising with the lantern.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_ebc56b0f6f.mp3" },
+            {
+                title: "Fear – The Shadow Inside",
+                img: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?auto=format&fit=crop&w=800&q=80",
+                invisible: "Shadows twist around quiet hearts.",
+                audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_9b8471bfb1.mp3"
+            },
+            { title: "Empathy – Connected Hearts", img: "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?auto=format&w=800", invisible: "Warm light threads link two strangers in the rain.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_58e8b0c3ce.mp3" },
+            { title: "Loneliness – Echoes of Silence", img: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?auto=format&w=800", invisible: "Emptiness has its own echo.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_9a23ed19c5.mp3" },
+            { title: "Intuition – The Inner Compass", img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&w=800", invisible: "Guidance without sight.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_d9cfadcbcc.mp3" },
+            { title: "Joy – The Energy of Laughter", img: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&w=800", invisible: "Happiness vibrates outward.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c2d9a3e4e.mp3" },
+            {
+                title: "Anxiety – Storm of the Mind",
+                img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
+                invisible: "Noise disguised as thought.",
+                audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3b5f26e081.mp3"
+            },
+            { title: "Love – Merged Light", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&w=800", invisible: "Two energies become one tone.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_4af40ff6e4.mp3" },
+            { title: "Curiosity – The Invisible Universe", img: "https://images.unsplash.com/photo-1505685296765-3a2736de412f?auto=format&w=800", invisible: "Inquiry turns small worlds infinite.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_96b05d2c6d.mp3" },
+            { title: "Faith – Threads of the Infinite", img: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&w=800", invisible: "Belief connects earth to sky.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3a0c10da0d.mp3" },
+            { title: "Digital Noise – The Pulse of the Web", img: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&w=800", invisible: "The unseen heartbeat of connection.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_d9cfadcbcc.mp3" },
+            { title: "Pollution – The Unseen Air", img: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&w=800", invisible: "Not all clarity is clean.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_9b8471bfb1.mp3" },
+            { title: "Memory – Echoes of the Past", img: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&w=800", invisible: "Time hums through what we remember.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_ebc56b0f6f.mp3" },
+            { title: "Time – Invisible River", img: "https://images.unsplash.com/photo-1473181488821-2d23949a045a?auto=format&w=800", invisible: "Moments stream unseen.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c2d9a3e4e.mp3" },
+            { title: "Dreams – Sleeping Realities", img: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&w=800", invisible: "Dreams paint where eyes are closed.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_58e8b0c3ce.mp3" },
+            { title: "Conscience – The Mirror Divide", img: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&w=800", invisible: "Morality speaks in silence.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3b5f26e081.mp3" },
+            { title: "Technological Dependence – Wired Souls", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&w=800", invisible: "Connection or control — one signal apart.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_9a23ed19c5.mp3" },
+            { title: "Environmental Balance – Breath of the Earth", img: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&w=800", invisible: "The planet breathes if you listen.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3a0c10da0d.mp3" },
+            { title: "Silence – Frozen Sound", img: "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?auto=format&w=800", invisible: "Silence is music between notes.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_d9cfadcbcc.mp3" },
+            { title: "Unity – One Light", img: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&w=800", invisible: "All voices resolve in harmony.", audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_4af40ff6e4.mp3" }
+        ];
+
+        const grid = document.getElementById("galleryGrid");
+        artworks.forEach(a => {
+            grid.innerHTML += `
+    <div class="col-sm-6 col-lg-3" data-aos="fade-up">
+      <div class="gallery-item" data-title="${a.title}"
+           data-invisible="${a.invisible}"
+           data-audio="${a.audio}" data-img="${a.img}">
+        <img src="${a.img}" alt="${a.title}">
+        <h6 class="mt-2">${a.title}</h6>
+      </div>
+    </div>`;
+        });
+
+        const modal = new bootstrap.Modal(document.getElementById('artModal'));
+        const title = document.getElementById('modalTitle');
+        const img = document.getElementById('modalImg');
+        const invisible = document.getElementById('modalInvisible');
+        const audio = document.getElementById('modalAudio');
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                title.textContent = item.dataset.title;
+                img.src = item.dataset.img;
+                invisible.textContent = item.dataset.invisible;
+                audio.src = item.dataset.audio;
+                modal.show();
+            });
+        });
+
+        function generatePrompt() {
+            const emotion = document.getElementById('promptInput').value.trim();
+            const out = document.getElementById('promptOutput');
+            if (!emotion) { out.textContent = "Please type an emotion or concept first."; return; }
+            out.style.opacity = 1;
+            out.textContent = `AI Prompt: "A surreal depiction of ${emotion}, blending light, texture, and emotion — visualizing the unseen energy within the human soul."`;
+        }
+        function clearPrompt() {
+            const input = document.getElementById('promptInput');
+            const out = document.getElementById('promptOutput');
+            input.value = '';
+            out.style.opacity = 0;
+            setTimeout(() => { out.textContent = ''; }, 500);
+        }
+
+        // ---------- Particle background ----------
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let w, h, particles = [];
+        function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        function createParticles() {
+            particles = Array(60).fill().map(() => ({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 2, dx: (Math.random() - 0.5) * 0.4, dy: (Math.random() - 0.5) * 0.4 }));
+        }
+        function drawParticles() {
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = "#00e0ff";
+            particles.forEach(p => {
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+                p.x += p.dx; p.y += p.dy;
+                if (p.x < 0 || p.x > w) p.dx *= -1;
+                if (p.y < 0 || p.y > h) p.dy *= -1;
+            });
+            requestAnimationFrame(drawParticles);
+        }
+        resize(); createParticles(); drawParticles();
+    </script>
 </body>
 
 </html>
